@@ -1,4 +1,4 @@
-module github.com/doniantoro/go-connect/v5
+module github.com/doniantoro/go-connect
 
 go 1.19
 
