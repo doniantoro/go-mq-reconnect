@@ -1,4 +1,4 @@
-module github.com/doniantoro/go-connect
+module github.com/doniantoro/go-connect/v5
 
 go 1.19
 
@@ -9,4 +9,10 @@ require (
 	github.com/pborman/uuid v1.2.1 // indirect
 	github.com/rabbitmq/amqp091-go v1.8.1 // indirect
 	github.com/tiago4orion/conjure v0.0.0-20150908101743-93cb30b9d218 // indirect
+)
+retract (
+	v2
+	v3
+	v4
+	v5
 )
