@@ -1,4 +1,4 @@
-module Belajar/go-connect
+module github.com/doniantoro/go-connect
 
 go 1.19
 
