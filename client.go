@@ -201,7 +201,7 @@ func (c *Connection) Channel() (*Channel, error) {
 	return channel, nil
 }
 
-// IsClosed indicate closed by developer
+// This function is function to Close connection
 func (ch *Channel) IsClosed() bool {
 	return (atomic.LoadInt32(&ch.closed) == 1)
 }
