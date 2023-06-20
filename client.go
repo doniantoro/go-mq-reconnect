@@ -32,6 +32,9 @@ type Channel struct {
 	closed int32
 }
 
+// This function is function to reconnect rabbitmq non ssl , this function need parameter rabbit mq host
+// This function owned by  Connection,and will return Connection it self. before call this function , need call NewRabbitMqConfig
+// This function will retry to reconnect every 3 seconds
 func (c *Connection) Rabbitmq(uri string) (*Connection, error) {
 
 	var conn wabbit.Conn
@@ -56,7 +59,7 @@ func (c *Connection) Rabbitmq(uri string) (*Connection, error) {
 
 			// reconnect if not closed by developer
 			for {
-				// wait 1s for reconnect
+				// wait 3s for reconnect
 				time.Sleep(3 * time.Second)
 
 				conn, err = amqp.Dial(uri)
@@ -75,9 +78,17 @@ func (c *Connection) Rabbitmq(uri string) (*Connection, error) {
 
 }
 
-func (c *Connection) RabbitmqSsl(uri, certFile, keyFile, pemCert string) (*Connection, error) {
+// This function is function to reconnect rabbitmq ssl , this function need some parameter :
+// - Uri = rabbit mq host
+// - certFile = public key of ssl certificate
+// - keyFile = private key of ssl certificate
+// - caCert = caCert of ssl certificate
+// - serverName= server name that will config in tls
+// This function owned by  Connection,and will return Connection it self. before call this function , need call NewRabbitMqConfig
+// This function will retry to reconnect every 3 seconds
+func (c *Connection) RabbitmqSsl(uri, certFile, keyFile, caCert, serverName string) (*Connection, error) {
 
-	caCert, err := os.ReadFile(pemCert)
+	caCertByte, err := os.ReadFile(caCert)
 
 	if err != nil {
 		log.Println("failed to read file ", caCert, ": with error err", err)
@@ -91,12 +102,12 @@ func (c *Connection) RabbitmqSsl(uri, certFile, keyFile, pemCert string) (*Conne
 	}
 
 	rootCAs := x509.NewCertPool()
-	rootCAs.AppendCertsFromPEM(caCert)
+	rootCAs.AppendCertsFromPEM(caCertByte)
 
 	tlsConf := &tls.Config{
 		RootCAs:      rootCAs,
 		Certificates: []tls.Certificate{cert},
-		ServerName:   "preprod_telkomsel", // Optional
+		ServerName:   serverName, // Optional
 	}
 
 	conn, err := amqp.DialTLS(uri, tlsConf)
@@ -121,7 +132,7 @@ func (c *Connection) RabbitmqSsl(uri, certFile, keyFile, pemCert string) (*Conne
 
 			// reconnect if not closed by developer
 			for {
-				// wait 1s for reconnect
+				// wait 3s for reconnect
 				time.Sleep(3 * time.Second)
 
 				conn, err := amqp.DialTLS(uri, tlsConf)
@@ -142,7 +153,10 @@ func (c *Connection) RabbitmqSsl(uri, certFile, keyFile, pemCert string) (*Conne
 
 }
 
-// Channel wrap amqp.Connection.Channel, get a auto reconnect channel
+// This function is function to re-create channel , after reconnect connection to rabbitmq
+// This function need to be called to re-create channel
+// This function owned by  Connection,and will return Connection it self. before call this function , need call NewRabbitMqConfig
+// This function will retry to reconnect every 3 seconds
 func (c *Connection) Channel() (*Channel, error) {
 	ch, err := c.Conn.Channel()
 	if err != nil {
@@ -168,7 +182,7 @@ func (c *Connection) Channel() (*Channel, error) {
 
 			// reconnect if not closed by developer
 			for {
-				// wait 1s for connection reconnect
+				// wait 3s for connection reconnect
 				time.Sleep(time.Duration(3) * time.Second)
 
 				ch, err := c.Conn.Channel()

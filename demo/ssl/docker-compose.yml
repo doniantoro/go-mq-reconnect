@@ -1,0 +1,15 @@
+version: "3"
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    volumes:
+      - ./certs:/ssl
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=mysecretcookie
+      - RABBITMQ_SSL_CERT_FILE=/ssl/server.crt
+      - RABBITMQ_SSL_KEY_FILE=/ssl/server.key
+      - RABBITMQ_SSL_CACERT_FILE=/ssl/ca.crt
+    command: rabbitmq-server
