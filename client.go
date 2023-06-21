@@ -16,17 +16,12 @@ func NewRabbitMqConfig() *Connection {
 	return &Connection{}
 }
 
-type Config struct {
-	Connection Connection
-	Channel    Channel
-}
-
 // Connection amqp.Connection wrapper
 type Connection struct {
 	wabbit.Conn
 }
 
-// Channel amqp.Channel wapper
+// Channel wabbit.Channel wapper
 type Channel struct {
 	wabbit.Channel
 	closed int32
@@ -80,10 +75,15 @@ func (c *Connection) Rabbitmq(uri string) (*Connection, error) {
 
 // This function is function to reconnect rabbitmq ssl , this function need some parameter :
 // - Uri = rabbit mq host
+
 // - certFile = public key of ssl certificate
+
 // - keyFile = private key of ssl certificate
+
 // - caCert = caCert of ssl certificate
+
 // - serverName= server name that will config in tls
+
 // This function owned by  Connection,and will return Connection it self. before call this function , need call NewRabbitMqConfig
 // This function will retry to reconnect every 3 seconds
 func (c *Connection) RabbitmqSsl(uri, certFile, keyFile, caCert, serverName string) (*Connection, error) {

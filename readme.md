@@ -1,4 +1,4 @@
-# Gogix - Golang HTTP client
+# Go-mq-reconnect - Library to reconnect rabbit mq
 
 - [Description](#description)
 - [Installation](#installation)
@@ -92,7 +92,7 @@ to run example,you can run rabbitmq first, if dont have rabbit mq , can use my d
 
 We use GitHub issues only to discuss bugs and new features. For support please refer to:
 
-- [Documentation](https://pkg.go.dev/github.com/doniantoro/go-mq-reconnect)
+- [Documentation](https://pkg.go.dev/github.com/doniantoro/go-mq-reconnect/v1)
 - [Medium ( soon) ](https://)
 
 ## License
