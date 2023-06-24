@@ -1,4 +1,4 @@
-module github.com/doniantoro/go-mq-reconnect
+module github.com/doniantoro/go-mq-reconnect/v1
 
 go 1.19
 
