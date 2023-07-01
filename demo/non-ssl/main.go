@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/NeowayLabs/wabbit"
-	reConnect "github.com/doniantoro/go-mq-reconnect/v1"
+	reConnect "github.com/doniantoro/go-mq-reconnect/v3"
 	"github.com/rabbitmq/amqp091-go"
 )
 
@@ -32,23 +32,22 @@ func publish() {
 	exchangeName := "test-exchange"
 	route := "test-route"
 
-	err = sendCh.ExchangeDeclare(exchangeName,
-		"topic", wabbit.Option{
-			"durable":  true,
-			"delete":   false,
-			"internal": false,
-			"noWait":   false,
-			"args": amqp091.Table{
-				"alternate-exchange": "my-ae",
-			},
-		})
-	if err != nil {
-		log.Panic(err)
-	}
-
 	go func() {
 		for {
 
+			err = sendCh.ExchangeDeclare(exchangeName,
+				"topic", wabbit.Option{
+					"durable":  true,
+					"delete":   false,
+					"internal": false,
+					"noWait":   false,
+					"args": amqp091.Table{
+						"alternate-exchange": "my-ae",
+					},
+				})
+			if err != nil {
+				log.Println(err)
+			}
 			err = sendCh.Publish(
 				exchangeName,
 				route,
@@ -57,6 +56,7 @@ func publish() {
 					"contentType": "application/json",
 				})
 
+			// fmt.Println("sendCh222", sendCh.IsClosed())
 			log.Printf("publish, err: %v", err)
 			time.Sleep(5 * time.Second)
 		}
@@ -81,6 +81,9 @@ func consume() {
 			"delete":    false,
 			"exclusive": false,
 			"noWait":    false,
+			"args": amqp091.Table{
+				"alternate-exchange": "my-ae",
+			},
 		}, // arguments
 	)
 
