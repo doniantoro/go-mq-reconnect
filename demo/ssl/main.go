@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/NeowayLabs/wabbit"
-	reConnect "github.com/doniantoro/go-mq-reconnect/v1"
+	reConnect "github.com/doniantoro/go-mq-reconnect"
 	"github.com/rabbitmq/amqp091-go"
 )
 
