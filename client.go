@@ -41,7 +41,6 @@ func (c *Connection) Rabbitmq(uri string) (*Connection, error) {
 	var err error
 	conn, err = amqp.Dial(uri)
 	if err != nil {
-
 		log.Println("connection closed")
 		return nil, err
 	}
@@ -204,4 +203,33 @@ func (c *Connection) Channel() (*Channel, error) {
 // IsClosed indicate closed by developer
 func (ch *Channel) IsClosed() bool {
 	return (atomic.LoadInt32(&ch.closed) == 1)
+}
+
+// Consume wrap amqp.Channel.Consume, the returned delivery will end only when channel closed by developer
+func (ch *Channel) Consume(queue, consumer string, opt wabbit.Option) (<-chan wabbit.Delivery, error) {
+	deliveries := make(chan wabbit.Delivery)
+
+	go func() {
+		for {
+			d, err := ch.Channel.Consume(queue, consumer, opt)
+			if err != nil {
+				// debugf("consume failed, err: %v", err)
+				time.Sleep(3 * time.Second)
+				continue
+			}
+
+			for msg := range d {
+				deliveries <- msg
+			}
+
+			// sleep before IsClose call. closed flag may not set before sleep.
+			time.Sleep(3 * time.Second)
+
+			if ch.IsClosed() {
+				break
+			}
+		}
+	}()
+
+	return deliveries, nil
 }
