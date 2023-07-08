@@ -12,3 +12,7 @@ require (
 	github.com/pborman/uuid v1.2.1 // indirect
 	github.com/tiago4orion/conjure v0.0.0-20150908101743-93cb30b9d218 // indirect
 )
+
+retract (
+v.0.0.3
+)

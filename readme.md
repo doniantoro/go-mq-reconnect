@@ -1,11 +1,11 @@
-# Gogix - Golang HTTP client
+# Go Mq Reconnect - Rabbitmq Reconnect for golang
 
 - [Description](#description)
 - [Installation](#installation)
 - [Usage](#usage)
-  - [Making a simple reconnection rabbitmq nonssl](#making-a-simple-reconnection-rabbitmq-nonssl)
-  - [Making a simple reconnection rabbitmq ssl](#making-a-simple-reconnection-rabbitmq-ssl)
-  - [How to run example](#how-to-run-example)
+  - [Making a simple `GET` request](#making-a-simple-get-request)
+  - [Making a `POST` request with payload and header](#making-a-post-request-with-payload-and-header)
+  - [Custom HTTP clients](#custom-http-clients)
 - [Help and docs](#help-and-docs)
 - [License](#license)
 
@@ -30,7 +30,7 @@ import reConnect "github.com/doniantoro/go-mq-reconnect"
 
 ## Usage
 
-### Making a simple Reconnection rabbitmq nonssl
+### Making a simple Reconection rabbitmq non-ssl
 
 The below example will Connect to rabbitmq non-ssl:
 
@@ -43,7 +43,7 @@ if err != nil{
 
 ```
 
-### Making a simple Reconnection rabbitmq ssl
+### Making a simple Reconection rabbitmq ssl
 
 The below example will Connect to rabbitmq ssl,ssl key can generate on [Openssl](https://www.openssl.org/):
 
@@ -81,7 +81,7 @@ to run example,you can run rabbitmq first, if dont have rabbit mq , can use my d
   cd demo/ssl/
 
   //optional if you dont have rabbitmq
-  docker-compose.yml up -d
+  docker-compose -f ./demo/ssl/docker-compose.yml up -d
 
   //if you run with your own rabbitmq , you need change port on demo/ssl/main.go,
   // default usually 5672,then run the program with command
